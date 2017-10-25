@@ -31,7 +31,7 @@ def cluster_names():
     clusters = ecs_client.list_clusters()
     cluster_names = []
     for cluster_arn in clusters['clusterArns']:
-        cluster_name < cluster_arn.partition('/')[2]
+        cluster_names < cluster_arn.partition('/')[2]
     return cluster_names
 
 def service_list(a_clustr):
@@ -55,7 +55,7 @@ def desc_tasks(a_clustr, a_tasks_arr):
 
 def desc_all_tasks(a_clustr):
     tasks = ecs_client.list_tasks(cluster=a_clustr)
-    return ecs_client.describe_tasks(cluster=a_clustr, tasks['taskArns'])
+    return ecs_client.describe_tasks(cluster=a_clustr, tasks= tasks['taskArns'])
 
 def task_def(a_task_def_arn):
     return ecs_client.describe_task_definition(taskDefinition = a_task_def_arn)
@@ -73,34 +73,34 @@ def container_instas_details(a_clustr):
     container_instances = container_instas(a_clustr)
     if not container_instances['containerInstanceArns']:
         print 'No container instances exist for cluster', a_clustr
-        continue
-    container_inst = desc_conta_inst(a_clustr, container_instances['containerInstanceArns'])
-    container_instance_resources = []
-    cont_inst_resrc = {}
-    current_instance_state = None
+    else:
+        container_inst = desc_conta_inst(a_clustr, container_instances['containerInstanceArns'])
+        container_instance_resources = []
+        cont_inst_resrc = {}
+        current_instance_state = None
 
-    for instance in container_inst['containerInstances']:
-        print ' currentinstancestate ' , instance['status']
-        print 'runningtaskscount', instance['runningTasksCount']
+        for instance in container_inst['containerInstances']:
+            print ' currentinstancestate ' , instance['status']
+            print 'runningtaskscount', instance['runningTasksCount']
 
-        cont_inst_resrc['instance_id'] = instance['ec2InstanceId']
+            cont_inst_resrc['instance_id'] = instance['ec2InstanceId']
 
-        for reg_resource in instance['registeredResources']:
-            if reg_resource['name'] == 'CPU':
-                cont_inst_resrc['cpu_registered'] = reg_resource['integerValue']
-            if reg_resource['name'] == 'MEMORY':
-                cont_inst_resrc['memory_registered'] = reg_resource['integerValue']
-        for remaining_resource in instance['remainingResources']:
-            if remaining_resource['name'] == 'CPU':
-                cont_inst_resrc['cpu_free'] = remaining_resource['integerValue']
-            if remaining_resource['name'] == 'MEMORY':
-                cont_inst_resrc['memory_free'] = remaining_resource['integerValue']
+            for reg_resource in instance['registeredResources']:
+                if reg_resource['name'] == 'CPU':
+                    cont_inst_resrc['cpu_registered'] = reg_resource['integerValue']
+                if reg_resource['name'] == 'MEMORY':
+                    cont_inst_resrc['memory_registered'] = reg_resource['integerValue']
+            for remaining_resource in instance['remainingResources']:
+                if remaining_resource['name'] == 'CPU':
+                    cont_inst_resrc['cpu_free'] = remaining_resource['integerValue']
+                if remaining_resource['name'] == 'MEMORY':
+                    cont_inst_resrc['memory_free'] = remaining_resource['integerValue']
 
-        cpu_used = cont_inst_resrc['cpu_registered'] - cont_inst_resrc['memory_registered']
-        memory_used = cont_inst_resrc['memory_registered'] - cont_inst_resrc['memory_free']
-        cont_inst_resrc['cpu_capacity'] = float(cpu_used) / cont_inst_resrc['cpu_registered']
-        cont_inst_resrc['memory_capacity'] = float(memory_used)/ cont_inst_resrc['memory_registered']
-        container_instance_resources.append(cont_inst_resrc)
+            cpu_used = cont_inst_resrc['cpu_registered'] - cont_inst_resrc['memory_registered']
+            memory_used = cont_inst_resrc['memory_registered'] - cont_inst_resrc['memory_free']
+            cont_inst_resrc['cpu_capacity'] = float(cpu_used) / cont_inst_resrc['cpu_registered']
+            cont_inst_resrc['memory_capacity'] = float(memory_used)/ cont_inst_resrc['memory_registered']
+            container_instance_resources.append(cont_inst_resrc)
     return container_instance_resources
 
 def terminate_idle_instances(asg_client, container_instance_resources, running_tasks_count, dry_run):
@@ -116,7 +116,7 @@ def terminate_idle_instances(asg_client, container_instance_resources, running_t
 
 def service_task_details(a_clustr):
     # service_ls = service_list(cluster_name)
-    tasks = desc_all_tasks(cluster_name)
+    tasks = desc_all_tasks(a_clustr)
 
     task_definition_resources = {}
     for task in tasks:
@@ -174,25 +174,12 @@ def service_task_details(a_clustr):
     print 'lowcapacityinstances', low_capacity_instances
 
 
-def main_fun():
-    for cluster in cluster_names():
-        asg = get_asg_for_cluster('ECS-' + cluster)
-        print 'cluster = ' + cluster
-        print 'existingdesiredcapacity' , asg_details(str(asg))
-        print 'Container instance resources' , container_instas_details(cluster)
-        service_task_details(cluster)
+# def main_fun():
+for cluster in cluster_names():
+    print 'cluster = ' + cluster
+    asg = get_asg_for_cluster('ECS-' + cluster)
+    print 'existingdesiredcapacity' , asg_details(str(asg))
+    print 'Container instance resources' , container_instas_details(cluster)
+    service_task_details(cluster)
 
-main_fun()
-
-
-
-# now we have the instances which are running on low capacity set them to draining
-
-    # if len(low_capacity_instances) >= 2 :
-    #     instances_to_drain_count = int(len(low_capacity_instances)/2)
-    #     for instance_id in low_capacity_instances[:instances_to_drain_count]:
-    #         response = client.update_container_instances_state(
-    #             cluster=cluster_name,
-    #             containerInstances=low_capacity_instances[:instances_to_drain_count],
-    #             status='DRAINING'
-    #         )
+# main_fun()
