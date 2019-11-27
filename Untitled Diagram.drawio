@@ -1,4 +1,4 @@
-<mxfile host="www.draw.io" modified="2019-11-27T08:03:28.845Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36" etag="bw-HwGuExCW8_y7g9Lqm" version="12.3.1" type="github" pages="1">
+<mxfile host="www.draw.io" modified="2019-11-27T08:04:43.768Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36" etag="7-mC81_tf4C3jdpp8MNU" version="12.3.1" type="github" pages="1">
   <diagram id="PSw_eITjVm3vNGns0JKH" name="Page-1">
     <mxGraphModel dx="1430" dy="624" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -203,8 +203,8 @@
         <mxCell id="etsb46hmWf3pHDXTE2O4-72" value="PegaCEE" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="106" y="90" width="124" height="20" as="geometry"/>
         </mxCell>
-        <mxCell id="etsb46hmWf3pHDXTE2O4-73" value="SLAIO" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="665" y="98" width="45" height="20" as="geometry"/>
+        <mxCell id="etsb46hmWf3pHDXTE2O4-76" value="SLAIO- API Only" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="581" y="100" width="139" height="20" as="geometry"/>
         </mxCell>
       </root>
     </mxGraphModel>
